@@ -20,4 +20,11 @@ public class OperationQueryService : IOperationQueryService
         var operation = await _operationRepository.ListAsync();
         return operation?.Where(operation => operation.IsActive) ?? Enumerable.Empty<Operation>();
     }
+
+    public async Task<Operation?> Handler(GetOperationByIdQuery query)
+    {
+        if (query == null) throw new ArgumentNullException(nameof(query));
+        var operation = await _operationRepository.FindByIdAsync(query.Id);
+        return operation?.IsActive == true ? operation : null;
+    }
 }

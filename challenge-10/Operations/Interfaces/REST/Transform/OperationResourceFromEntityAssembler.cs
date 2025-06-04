@@ -8,6 +8,6 @@ public static class OperationResourceFromEntityAssembler
 {
     public static OperationResource ToResourceFromEntity(Operation operation)
     {
-        return new OperationResource(operation.Id, operation.Name, operation.Description, operation.Completed);
+        return new OperationResource(operation.Id, operation.Name, operation.Description, operation.Completed, operation.CompletedDate);
     }
 }

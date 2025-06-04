@@ -31,7 +31,9 @@ public class Challenge10Context(DbContextOptions options) : DbContext(options)
                     .HasMaxLength(500);
                 entity.Property(c => c.Completed)
                     .IsRequired();
-
+                entity.Property(c => c.CompletedDate)
+                    .IsRequired();
+                
                 entity.HasIndex(c => c.Name)
                     .IsUnique(); // Ensures uniqueness
             });

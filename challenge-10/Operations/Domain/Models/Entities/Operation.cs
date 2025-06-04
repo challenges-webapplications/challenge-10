@@ -10,14 +10,15 @@ public class Operation : BaseEntity
     public string Description { get; init; }
     public bool Completed { get; init; }
 
+    public DateTime CompletedDate { get; init; }
 
-    public Operation(string name, string description, bool completed)
+    public Operation(string name, string description, bool completed, DateTime completedDate)
     {
 
         Name = name;
         Description = description;
         Completed = completed;
-
+        CompletedDate = completedDate;
     }
 
 

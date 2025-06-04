@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using challenge_10.Operations.Domain.Models.Queries;
 using challenge_10.Operations.Interfaces.REST.Transform;
 using challenge_10.Operations.Domain.Models.Commands;
+using NuGet.Common;
 
 namespace challenge_10.Operations.Interfaces.REST;
 
@@ -31,6 +32,10 @@ public class OperationController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] CreateOperationCommand command)
     {
+        if (command.CompletedDate > DateTime.UtcNow)
+        {
+            throw new InvalidOperationException("La fecha no concuerda.");
+        }
         if (command == null) return BadRequest("invalid Operation");
         try
         {
@@ -51,14 +56,22 @@ public class OperationController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         if (id <= 0) return BadRequest("invalid id");
-        try
+         var getOperationQuery = new GetOperationByIdQuery(id);
+        var operation = await _operationQueryService.Handler(getOperationQuery);
+        var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
+            if (operation?.CompletedDate > thirtyDaysAgo)
+            {
+                return BadRequest("Solo se pueden eliminar operaciones completadas hace más de 30 días");
+            }
+        try 
         {
             var command = new DeleteOperation(id);
             await _operationCommandService.Handler(command);
             return NoContent();
 
         }
-        catch (Exception ex){
+        catch (Exception ex)
+        {
             return Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
     }

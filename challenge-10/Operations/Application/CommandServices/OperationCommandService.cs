@@ -19,7 +19,7 @@ public class OperationCommandService(IOperationsRepository operationRepository, 
         var operations = await _operationRepository.ListAsync();
         if (operations.Any(operation => operation.Name == command.Name))
             throw new DuplicateNameException($"A book with the name '{command.Name}' already exists.");
-        var operation = new Operation(command.Name, command.Description, command.Completed)
+        var operation = new Operation(command.Name, command.Description, command.Completed, command.CompletedDate)
         {
             UserId = 1
         };
